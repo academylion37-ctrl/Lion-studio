@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lion Studio 🦁</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: linear-gradient(135deg, #090d16 0%, #111827 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .app-wrapper {
+      width: 100%;
+      max-width: 780px;
+      margin-top: 10px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+    .login-card {
+      max-width: 440px;
+      margin: 40px auto;
+      text-align: center;
+      padding: 32px 24px;
+    }
+    .studio-logo {
+      font-size: 46px;
+      margin-bottom: 8px;
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #fbbf24;
+      letter-spacing: 0.5px;
+    }
+    .login-hint {
+      font-size: 15px;
+      color: #cbd5e1;
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+    .down-pointer {
+      font-size: 26px;
+      display: block;
+      margin-top: 6px;
+      animation: bounce 1.4s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    input, textarea {
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 15px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus {
+      border-color: #fbbf24;
+    }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000000;
+      width: 100%;
+    }
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #ffffff;
+      width: 100%;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+    .btn-blue {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-red {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    .btn-dark {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .blocked-banner {
+      background: #7f1d1d;
+      border: 1px solid #ef4444;
+      color: #fecaca;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .badge {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    /* JioHome स्टाइल टॉगल स्विच */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #22c55e;
+      transition: 0.3s;
+      border-radius: 28px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #ef4444;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    /* डिवाइस लिस्ट आइटम */
+    .device-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+    .device-meta h4 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      color: #f8fafc;
+    }
+    .device-meta p {
+      margin: 0;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    /* चैट बॉक्स */
+    .chat-window {
+      height: 300px;
+      overflow-y: auto;
+      background: #090d16;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 82%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .bubble-user {
+      background: #2563eb;
+      color: #ffffff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble-ai {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-controls {
+      display: flex;
+      gap: 8px;
+    }
+    .chat-controls input {
+      margin-bottom: 0;
+    }
+    .log-item {
+      background: #0f172a;
+      border-left: 3px solid #3b82f6;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <!-- ==================== 1. सिंगल लॉगिन स्क्रीन (यूज़र और एडमिन दोनों के लिए एक ही) ==================== -->
+    <div id="loginScreen" class="card login-card">
+      <div class="studio-logo">🦁</div>
+      <h1 class="login-title">Lion Studio पासवर्ड 🔒</h1>
+      <p class="login-hint">
+        नीचे अपना पासवर्ड डालें और अंदर प्रवेश करें ✨
+        <span class="down-pointer">👇</span>
+      </p>
+
+      <!-- यदि एडमिन ने यह डिवाइस ब्लॉक किया है तो चेतावनी -->
+      <div id="deviceBlockedBox" class="blocked-banner hidden">
+        🚫 आपका डिवाइस एडमिन द्वारा ब्लॉक कर दिया गया है! अब कोई भी पासवर्ड काम नहीं करेगा। अनब्लॉक कराने के लिए नीचे WhatsApp चैनल पर संपर्क करें।
+      </div>
+
+      <input type="password" id="singlePasswordInput" placeholder="🔑 यहाँ पासवर्ड डालें..." onkeypress="if(event.key==='Enter') processSingleLogin()" />
+      <button class="btn-gold" onclick="processSingleLogin()">🚀 अनलॉक करें</button>
+
+      <!-- WhatsApp चैनल लिंक बटन (पेमेंट और सवाल पूछने के लिए) -->
+      <button class="btn-whatsapp" onclick="openWhatsAppChannel()">
+        💬 WhatsApp चैनल पर जुड़ें / मैसेज करें 📲
+      </button>
+    </div>
+
+    <!-- ==================== 2. यूज़र डैशबोर्ड (केवल यूज़र पासवर्ड डालने पर खुलेगा) ==================== -->
+    <div id="userDashboard" class="hidden">
+      <div class="card header-bar">
+        <div>
+          <h2 style="margin:0; font-size:20px; color:#fbbf24;">🦁 Lion Studio — AI व लाइव क्लास</h2>
+          <span class="badge" id="currentUserDeviceTag">📱 डिवाइस पहचाना जा रहा है...</span>
+        </div>
+        <button class="btn-dark" onclick="logoutToLogin()">🚪 लॉगआउट</button>
+      </div>
+
+      <!-- लाइव क्लास बॉक्स (एडमिन जब लाइव चालू करेगा तभी यूज़र को दिखेगा) -->
+      <div class="card" id="userLiveClassCard">
+        <div class="header-bar">
+          <div>
+            <h3 style="margin:0 0 4px;">🎥 लाइव क्लास (Google Meet)</h3>
+            <p id="userLiveStatusMsg" style="margin:0; font-size:13px; color:#94a3b8;">⏳ लाइव क्लास की स्थिति जाँची जा रही है...</p>
+          </div>
+          <button id="joinLiveClassBtn" class="btn-gold hidden" style="width:auto;" onclick="openGoogleMeet()">
+            🔴 लाइव क्लास देखें
+          </button>
+        </div>
+      </div>
+
+      <!-- AI चैट और लाइव वॉइस असिस्टेंट -->
+      <div class="card">
+        <div class="header-bar" style="margin-bottom:12px;">
+          <h3 style="margin:0;">🤖 AI स्मार्ट असिस्टेंट</h3>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-blue" id="micBtn" onclick="startVoiceRecognition()">🎙️ बोलकर पूछें</button>
+            <button class="btn-dark" id="speakerBtn" onclick="toggleVoiceReply()">🔊 आवाज़: चालू</button>
+          </div>
+        </div>
+
+        <div class="chat-window" id="userChatWindow"></div>
+
+        <div class="chat-controls">
+          <input type="text" id="userQuestionInput" placeholder="✍️ अपना सवाल यहाँ लिखें..." onkeypress="if(event.key==='Enter') sendUserQuestion()" />
+          <button class="btn-blue" onclick="sendUserQuestion()">भेजें 📤</button>
+        </div>
+      </div>
+
+      <!-- WhatsApp चैनल सपोर्ट -->
+      <div class="card" style="text-align:center;">
+        <p style="margin:0 0 8px; font-size:14px; color:#cbd5e1;">💳 पेमेंट या किसी भी सहायता के लिए सीधे हमारे WhatsApp चैनल पर मैसेज करें:</p>
+        <button class="btn-whatsapp" onclick="openWhatsAppChannel()">💬 WhatsApp चैनल खोलें 📲</button>
+      </div>
+    </div>
+
+    <!-- ==================== 3. एडमिन ऑफिस पैनल (केवल एडमिन पासवर्ड डालने पर खुलेगा) ==================== -->
+    <div id="adminDashboard" class="hidden">
+      <div class="card header-bar">
+        <div>
+          <h2 style="margin:0; font-size:21px; color:#fbbf24;">👑 Lion Studio — एडमिन ऑफिस</h2>
+          <p style="margin:4px 0 0; font-size:13px; color:#94a3b8;">सभी कनेक्टेड डिवाइस, लाइव क्लास और पासवर्ड कंट्रोल</p>
+        </div>
+        <button class="btn-red" onclick="logoutToLogin()">🚪 बाहर निकलें</button>
+      </div>
+
+      <!-- JioHome स्टाइल कनेक्टेड डिवाइस लिस्ट और ब्लॉक टॉगल -->
+      <div class="card">
+        <div class="header-bar" style="margin-bottom:12px;">
+          <h3 style="margin:0;">📡 कनेक्टेड डिवाइसेस (ऑटो-डिटेक्ट)</h3>
+          <button class="btn-blue" onclick="renderAdminPanel()">🔄 रिफ्रेश करें</button>
+        </div>
+        <p style="font-size:13px; color:#94a3b8; margin-top:0;">
+          जो भी फ़ोन इस ऐप को खोलेगा, उसका मॉडल अपने आप यहाँ दिखेगा। टॉगल चालू (लाल) करते ही वह डिवाइस पूरी तरह ब्लॉक हो जाएगा:
+        </p>
+        <div id="connectedDevicesList"></div>
+      </div>
+
+      <!-- लाइव क्लास और सेटिंग्स कंट्रोल -->
+      <div class="card">
+        <h3 style="margin-top:0;">⚙️ एडमिन सेटिंग्स और कंट्रोल</h3>
+
+        <div class="device-row" style="margin-bottom:16px;">
+          <div class="device-meta">
+            <h4>🎥 लाइव क्लास स्टेटस (Google Meet)</h4>
+            <p id="adminLiveToggleLabel">अभी लाइव क्लास बंद है (यूज़र जॉइन नहीं कर सकते)</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="adminLiveSwitch" onchange="toggleLiveClassStatus()" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <label>🔑 यूज़र पासवर्ड (जो पेमेंट करने वाले यूज़र्स को देना है):</label>
+        <input type="text" id="setUserPass" placeholder="उदाहरण: LION2026" />
+
+        <label>👑 एडमिन ऑफिस पासवर्ड (केवल आपके लिए गुप्त):</label>
+        <input type="text" id="setAdminPass" placeholder="उदाहरण: admin@lion99" />
+
+        <label>💬 WhatsApp चैनल लिंक (यहाँ अपना लिंक पेस्ट करें):</label>
+        <input type="text" id="setWhatsappLink" placeholder="https://whatsapp.com/channel/..." />
+
+        <label>📹 Google Meet क्लास लिंक:</label>
+        <input type="text" id="setMeetLink" placeholder="https://meet.google.com/xxx-xxxx-xxx" />
+
+        <label>🧠 Gemini AI API Key (असली AI जवाब के लिए):</label>
+        <input type="password" id="setGeminiKey" placeholder="AIzaSy..." />
+
+        <label>☁️ Render / Cloudflare D1 सर्वर URL (सभी फ़ोन्स का डेटा लाइव सिंक करने के लिए):</label>
+        <input type="text" id="setCloudServerUrl" placeholder="https://your-lion-studio.onrender.com" />
+
+        <button class="btn-gold" onclick="saveAllAdminSettings()">💾 सभी सेटिंग्स सेव करें</button>
+      </div>
+
+      <!-- यूज़र एक्टिविटी लॉग (कौन किस डिवाइस से क्या पूछ रहा है) -->
+      <div class="card">
+        <div class="header-bar" style="margin-bottom:10px;">
+          <h3 style="margin:0;">🕵️‍♂️ लाइव यूज़र एक्टिविटी (किसने क्या पूछा)</h3>
+          <button class="btn-dark" onclick="clearActivityLogs()">🗑️ साफ़ करें</button>
+        </div>
+        <div id="adminActivityLogBox"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==================== डेटा स्टोरेज कीज़ ====================
+    const STORE = {
+      CONFIG: "lion_studio_config_v2",
+      DEVICES: "lion_studio_devices_v2",
+      LOGS: "lion_studio_logs_v2",
+      MY_DEVICE_UID: "lion_studio_my_uid_v2"
+    };
+
+    let voiceReplyOn = true;
+
+    // डिफ़ॉल्ट सेटिंग्स प्राप्त करें
+    function getConfig() {
+      const defaultConfig = {
+        userPass: "1234",
+        adminPass: "Studio. lion 99",
+        whatsappLink: "https://wa.me/message/76G36CHUYOLKL1",
+        meetLink: "https://meet.google.com/",
+        geminiKey: "AQ.Ab8RN6J_7QotIpk3rB2OmI4K-KD9PoUB77REqtz_UUkATHJ23Q",
+        cloudServerUrl: "",
+        isLiveActive: false
+      };
+      const saved = JSON.parse(localStorage.getItem(STORE.CONFIG) || "{}");
+      return { ...defaultConfig, ...saved };
+    }
+
+    function saveConfig(cfg) {
+      localStorage.setItem(STORE.CONFIG, JSON.stringify(cfg));
+    }
+
+    // ==================== ऑटोमैटिक डिवाइस पहचान (JioHome जैसा) ====================
+    function getUniqueDeviceId() {
+      let uid = localStorage.getItem(STORE.MY_DEVICE_UID);
+      if (!uid) {
+        uid = "DEV-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+        localStorage.setItem(STORE.MY_DEVICE_UID, uid);
+      }
+      return uid;
+    }
+
+    function detectDeviceModelAutomatically() {
+      const ua = navigator.userAgent;
+      if (/iPhone/i.test(ua)) return "Apple iPhone 📱";
+      if (/iPad/i.test(ua)) return "Apple iPad 📲";
+      if (/Samsung|SM-/i.test(ua)) {
+        const match = ua.match(/SM-[A-Z0-9]+/i);
+        return "Samsung Galaxy (" + (match ? match[0] : "Android") + ") 📱";
+      }
+      if (/Redmi|Xiaomi|POCO/i.test(ua)) return "Xiaomi / Redmi Phone 📱";
+      if (/OPPO|CPH/i.test(ua)) return "OPPO Smartphone 📱";
+      if (/vivo|V2/i.test(ua)) return "Vivo Smartphone 📱";
+      if (/Realme|RMX/i.test(ua)) return "Realme Smartphone 📱";
+      if (/OnePlus/i.test(ua)) return "OnePlus Smartphone 📱";
+      if (/Android/i.test(ua)) return "Android Device 📱";
+      if (/Windows/i.test(ua)) return "Windows PC 💻";
+      if (/Mac/i.test(ua)) return "Apple Mac 💻";
+      return "Unknown Device 🖥️";
+    }
+
+    function getDevicesMap() {
+      return JSON.parse(localStorage.getItem(STORE.DEVICES) || "{}");
+    }
+
+    function saveDevicesMap(map) {
+      localStorage.setItem(STORE.DEVICES, JSON.stringify(map));
+    }
+
+    // वर्तमान डिवाइस को ऑटो-रजिस्टर और ब्लॉक स्थिति चेक करें
+    async function registerAndCheckDevice() {
+      const uid = getUniqueDeviceId();
+      const devices = getDevicesMap();
+      const detectedModel = detectDeviceModelAutomatically();
+      const nowTime = new Date().toLocaleString("hi-IN");
+
+      if (!devices[uid]) {
+        devices[uid] = {
+          uid: uid,
+          modelName: detectedModel,
+          blocked: false,
+          lastActive: nowTime,
+          roleUsed: "Visitor"
+        };
+      } else {
+        devices[uid].modelName = detectedModel;
+        devices[uid].lastActive = nowTime;
+      }
+      saveDevicesMap(devices);
+
+      // यदि Render / Cloudflare D1 सर्वर जुड़ा है तो वहाँ से भी ब्लॉक स्टेटस सिंक करें
+      const cfg = getConfig();
+      if (cfg.cloudServerUrl) {
+        try {
+          const res = await fetch(cfg.cloudServerUrl.replace(/\/$/, "") + "/api/sync-device", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(devices[uid])
+          });
+          if (res.ok) {
+            const remoteData = await res.json();
+            if (typeof remoteData.blocked === "boolean") {
+              devices[uid].blocked = remoteData.blocked;
+              saveDevicesMap(devices);
+            }
+          }
+        } catch (err) {
+          // ऑफ़लाइन होने पर लोकल स्टोरेज से चलता रहेगा
+        }
+      }
+
+      return devices[uid];
+    }
+
+    // ==================== एक्टिविटी लॉग (एडमिन ऑफिस के लिए) ====================
+    function addActivityLog(deviceModel, uid, actionText) {
+      const logs = JSON.parse(localStorage.getItem(STORE.LOGS) || "[]");
+      logs.unshift({
+        time: new Date().toLocaleTimeString("hi-IN"),
+        device: deviceModel + " (" + uid + ")",
+        text: actionText
+      });
+      if (logs.length > 50) logs.pop();
+      localStorage.setItem(STORE.LOGS, JSON.stringify(logs));
+    }
+
+    // ==================== सिंगल पासवर्ड लॉगिन सिस्टम ====================
+    async function initializeApp() {
+      const dev = await registerAndCheckDevice();
+      const blockedBox = document.getElementById("deviceBlockedBox");
+      if (dev.blocked) {
+        blockedBox.classList.remove("hidden");
+      } else {
+        blockedBox.classList.add("hidden");
+      }
+    }
+
+    async function processSingleLogin() {
+      const enteredPass = document.getElementById("singlePasswordInput").value.trim();
+      if (!enteredPass) {
+        alert("⚠️ कृपया पहले पासवर्ड डालें!");
+        return;
+      }
+
+      const cfg = getConfig();
+      const dev = await registerAndCheckDevice();
+
+      // 1. पहले चेक करें कि क्या यह एडमिन पासवर्ड है
+      if (enteredPass === cfg.adminPass) {
+        document.getElementById("singlePasswordInput").value = "";
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("userDashboard").classList.add("hidden");
+        document.getElementById("adminDashboard").classList.remove("hidden");
+        renderAdminPanel();
+        return;
+      }
+
+      // 2. यदि यह डिवाइस ब्लॉक है, तो सही यूज़र पासवर्ड भी काम नहीं करेगा
+      if (dev.blocked) {
+        document.getElementById("deviceBlockedBox").classList.remove("hidden");
+        alert("🚫 आपका डिवाइस ब्लॉक कर दिया गया है! सही पासवर्ड डालने पर भी यह नहीं खुलेगा।");
+        return;
+      }
+
+      // 3. यूज़र पासवर्ड चेक करें
+      if (enteredPass === cfg.userPass) {
+        const devices = getDevicesMap();
+        devices[dev.uid].roleUsed = "User ✅";
+        saveDevicesMap(devices);
+
+        addActivityLog(dev.modelName, dev.uid, "🔑 यूज़र पासवर्ड से ऐप अनलॉक किया");
+
+        document.getElementById("singlePasswordInput").value = "";
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("adminDashboard").classList.add("hidden");
+        document.getElementById("userDashboard").classList.remove("hidden");
+
+        setupUserDashboard(dev);
+      } else {
+        addActivityLog(dev.modelName, dev.uid, "❌ गलत पासवर्ड डालने की कोशिश की: " + enteredPass);
+        alert("❌ गलत पासवर्ड! सही पासवर्ड प्राप्त करने के लिए नीचे WhatsApp चैनल पर संपर्क करें।");
+      }
+    }
+
+    function logoutToLogin() {
+      document.getElementById("userDashboard").classList.add("hidden");
+      document.getElementById("adminDashboard").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+      initializeApp();
+    }
+
+    function openWhatsAppChannel() {
+      const cfg = getConfig();
+      if (!cfg.whatsappLink || cfg.whatsappLink === "https://whatsapp.com/channel/") {
+        alert("ℹ️ एडमिन ने अभी WhatsApp चैनल का पूरा लिंक अपडेट नहीं किया है।");
+        return;
+      }
+      window.open(cfg.whatsappLink, "_blank");
+    }
+
+    // ==================== यूज़र डैशबोर्ड और AI चैट ====================
+    function setupUserDashboard(dev) {
+      document.getElementById("currentUserDeviceTag").innerText = dev.modelName + " • ID: " + dev.uid;
+      const cfg = getConfig();
+
+      // लाइव क्लास स्टेटस अपडेट करें (यूज़र केवल देख सकता है जब एडमिन लाइव चालू करे)
+      const liveMsg = document.getElementById("userLiveStatusMsg");
+      const joinBtn = document.getElementById("joinLiveClassBtn");
+      if (cfg.isLiveActive) {
+        liveMsg.innerText = "🟢 एडमिन अभी लाइव हैं! आप क्लास देख सकते हैं।";
+        liveMsg.style.color = "#4ade80";
+        joinBtn.classList.remove("hidden");
+      } else {
+        liveMsg.innerText = "🔴 अभी लाइव क्लास बंद है। एडमिन के लाइव आने का इंतज़ार करें।";
+        liveMsg.style.color = "#94a3b8";
+        joinBtn.classList.add("hidden");
+      }
+
+      const chatWin = document.getElementById("userChatWindow");
+      if (chatWin.innerHTML.trim() === "") {
+        appendChatBubble("ai", "नमस्ते! 🦁 Lion Studio में आपका स्वागत है। आप अपना सवाल लिखकर या बोलकर पूछ सकते हैं।");
+      }
+    }
+
+    function openGoogleMeet() {
+      const cfg = getConfig();
+      if (cfg.meetLink) {
+        window.open(cfg.meetLink, "_blank");
+      } else {
+        alert("⚠️ लाइव क्लास का लिंक उपलब्ध नहीं है।");
+      }
+    }
+
+    function appendChatBubble(role, text) {
+      const win = document.getElementById("userChatWindow");
+      const div = document.createElement("div");
+      div.className = "bubble " + (role === "user" ? "bubble-user" : "bubble-ai");
+      div.innerText = text;
+      win.appendChild(div);
+      win.scrollTop = win.scrollHeight;
+
+      if (role === "ai" && voiceReplyOn && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "hi-IN";
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    async function sendUserQuestion() {
+      const dev = await registerAndCheckDevice();
+      if (dev.blocked) {
+        alert("🚫 एडमिन ने अभी आपका डिवाइस ब्लॉक कर दिया है!");
+        logoutToLogin();
+        return;
+      }
+
+      const input = document.getElementById("userQuestionInput");
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = "";
+
+      appendChatBubble("user", question);
+      addActivityLog(dev.modelName, dev.uid, "❓ सवाल पूछा: " + question);
+
+      // सम्मानजनक सुरक्षा फ़िल्टर
+      const badWords = ["गाली", "hack", "bypass", "abuse", "illegal"];
+      if (badWords.some(w => question.toLowerCase().includes(w))) {
+        appendChatBubble("ai", "🙏 कृपया केवल सम्मानजनक और उपयोगी सवाल ही पूछें।");
+        return;
+      }
+
+      const cfg = getConfig();
+      if (cfg.geminiKey) {
+        try {
+          const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(cfg.geminiKey),
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [{
+                    text: "तुम Lion Studio के विनम्र, सम्मानजनक और मददगार AI असिस्टेंट हो। हिंदी में स्पष्ट उत्तर दो। सवाल: " + question
+                  }]
+                }]
+              })
+            }
+          );
+          const data = await response.json();
+          const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (answer) {
+            appendChatBubble("ai", answer);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      setTimeout(() => {
+        appendChatBubble("ai", "✨ आपका सवाल नोट कर लिया गया है: \"" + question + "\"। एडमिन द्वारा AI Key जोड़ते ही यहाँ तुरंत लाइव जवाब मिलेगा!");
+      }, 400);
+    }
+
+    function toggleVoiceReply() {
+      voiceReplyOn = !voiceReplyOn;
+      document.getElementById("speakerBtn").innerText = voiceReplyOn ? "🔊 आवाज़: चालू" : "🔇 आवाज़: बंद";
+      if (!voiceReplyOn && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    }
+
+    function startVoiceRecognition() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        alert("⚠️ आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
+        return;
+      }
+      const rec = new SpeechRec();
+      rec.lang = "hi-IN";
+      const micBtn = document.getElementById("micBtn");
+      micBtn.innerText = "🎧 सुन रहा हूँ...";
+      rec.onresult = (e) => {
+        document.getElementById("userQuestionInput").value = e.results[0][0].transcript;
+        sendUserQuestion();
+      };
+      rec.onend = () => { micBtn.innerText = "🎙️ बोलकर पूछें"; };
+      rec.start();
+    }
+
+    // ==================== एडमिन ऑफिस पैनल कंट्रोल ====================
+    function renderAdminPanel() {
+      const cfg = getConfig();
+      document.getElementById("setUserPass").value = cfg.userPass;
+      document.getElementById("setAdminPass").value = cfg.adminPass;
+      document.getElementById("setWhatsappLink").value = cfg.whatsappLink;
+      document.getElementById("setMeetLink").value = cfg.meetLink;
+      document.getElementById("setGeminiKey").value = cfg.geminiKey;
+      document.getElementById("setCloudServerUrl").value = cfg.cloudServerUrl;
+
+      const liveSwitch = document.getElementById("adminLiveSwitch");
+      liveSwitch.checked = cfg.isLiveActive;
+      document.getElementById("adminLiveToggleLabel").innerText = cfg.isLiveActive
+        ? "🟢 लाइव क्लास चालू है (सभी यूज़र्स देख सकते हैं)"
+        : "🔴 लाइव क्लास बंद है (यूज़र जॉइन नहीं कर सकते)";
+
+      // कनेक्टेड डिवाइसेस की सूची दिखाएँ (JioHome टॉगल के साथ)
+      const devices = getDevicesMap();
+      const listContainer = document.getElementById("connectedDevicesList");
+      listContainer.innerHTML = "";
+
+      const allList = Object.values(devices);
+      if (allList.length === 0) {
+        listContainer.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>अभी कोई डिवाइस कनेक्ट नहीं हुआ है।</p>";
+      } else {
+        allList.forEach(dev => {
+          const row = document.createElement("div");
+          row.className = "device-row";
+          row.innerHTML = `
+            <div class="device-meta">
+              <h4>${dev.modelName} <span style="font-size:11px; color:#fbbf24;">[${dev.uid}]</span></h4>
+              <p>अंतिम सक्रिय: ${dev.lastActive} • स्थिति: <strong style="color:${dev.blocked ? '#f87171' : '#4ade80'};">${dev.blocked ? '🚫 Blocked' : '✅ Active'}</strong></p>
+            </div>
+            <div style="text-align:right;">
+              <label class="switch" title="ब्लॉक / अनब्लॉक करें">
+                <input type="checkbox" ${dev.blocked ? "checked" : ""} onchange="toggleDeviceBlockSwitch('${dev.uid}', this.checked)" />
+                <span class="slider"></span>
+              </label>
+              <div style="font-size:11px; margin-top:4px; color:${dev.blocked ? '#f87171' : '#4ade80'};">
+                ${dev.blocked ? "ब्लॉक है" : "चालू है"}
+              </div>
+            </div>
+          `;
+          listContainer.appendChild(row);
+        });
+      }
+
+      // यूज़र एक्टिविटी लॉग दिखाएँ
+      const logs = JSON.parse(localStorage.getItem(STORE.LOGS) || "[]");
+      const logBox = document.getElementById("adminActivityLogBox");
+      logBox.innerHTML = "";
+      if (logs.length === 0) {
+        logBox.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>अभी तक कोई गतिविधि दर्ज नहीं हुई है।</p>";
+      } else {
+        logs.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "log-item";
+          div.innerHTML = `<strong>${item.device}</strong> <span style="color:#94a3b8; font-size:11px;">(${item.time})</span><br/>${item.text}`;
+          logBox.appendChild(div);
+        });
+      }
+    }
+
+    async function toggleDeviceBlockSwitch(uid, shouldBlock) {
+      const devices = getDevicesMap();
+      if (!devices[uid]) return;
+      devices[uid].blocked = shouldBlock;
+      saveDevicesMap(devices);
+
+      // यदि Render / Cloudflare D1 URL जुड़ा है तो सर्वर पर भी तुरंत अपडेट भेजें
+      const cfg = getConfig();
+      if (cfg.cloudServerUrl) {
+        try {
+          await fetch(cfg.cloudServerUrl.replace(/\/$/, "") + "/api/block-device", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uid: uid, blocked: shouldBlock })
+          });
+        } catch (e) {
+          console.warn("सर्वर सिंक विफल, लोकल में अपडेट हो गया है।");
+        }
+      }
+
+      renderAdminPanel();
+    }
+
+    function toggleLiveClassStatus() {
+      const cfg = getConfig();
+      cfg.isLiveActive = document.getElementById("adminLiveSwitch").checked;
+      saveConfig(cfg);
+      renderAdminPanel();
+    }
+
+    function saveAllAdminSettings() {
+      const cfg = getConfig();
+      cfg.userPass = document.getElementById("setUserPass").value.trim() || "1234";
+      cfg.adminPass = document.getElementById("setAdminPass").value.trim() || "admin123";
+      cfg.whatsappLink = document.getElementById("setWhatsappLink").value.trim();
+      cfg.meetLink = document.getElementById("setMeetLink").value.trim();
+      cfg.geminiKey = document.getElementById("setGeminiKey").value.trim();
+      cfg.cloudServerUrl = document.getElementById("setCloudServerUrl").value.trim();
+      saveConfig(cfg);
+      alert("✅ Lion Studio की सभी सेटिंग्स सेव हो गई हैं!");
+      renderAdminPanel();
+    }
+
+    function clearActivityLogs() {
+      localStorage.removeItem(STORE.LOGS);
+      renderAdminPanel();
+    }
+
+    // ऐप लोड होते ही शुरू करें
+    initializeApp();
+  </script>
+</body>
+</html>
